@@ -1,13 +1,7 @@
 #include "trendtracker.h"
-
-//what does tracking no hashtags mean? assuming it means empty
 Trendtracker :: Trendtracker()//O(1) constant
 {
-    //assuming i have to initilize E to null or 0 
-    //E ; // i am not to familiar with initializing vectors to empty/0/null
-    //seems that declaring it creates just an empty vector should be good enough
-    //issue i see here is that the E is overwritten everytime we create a class object
-    //no thats wrong since each class object will have its own E
+
 }
 
 void Trendtracker :: insert(string ht)
@@ -20,7 +14,9 @@ void Trendtracker :: insert(string ht)
     Entry n;
     n.hashtag = ht;
     n.pop = 0 ; //tweeted zero times
-    E[E.size() + 1] = n; //adding n 
+   // E[E.size() + 1] = n; //adding n  //read that this doesnt work have to resize the array
+   //cam use //resize or pushback
+    E.push_back(n);
 }
 
 int Trendtracker :: size() // O(1) 
@@ -62,17 +58,16 @@ string Trendtracker:: top_trend()
         return "";
     else //check for largest pop
     {
+        int top_pop = 0;  //moved so it doesnt overwrite
+
         for (int i =0; i < E.size(); i++)
         {
-            int top_pop = 0;  
-
             if (E[top_pop].pop < E[i].pop ) //what do i do in equal condition ? do i update or not to make <=
             {
                 top_pop = i;
             }             
-            return E[top_pop].hashtag; 
-
         }
+        return E[top_pop].hashtag; 
     }
 
 }
@@ -85,17 +80,18 @@ void Trendtracker:: top_three_trends(vector<string> &T)
 
     else //check for 3 largest pops
     {
+        int first_pop = 0;
+        int second_pop  = 0;
+        int third_pop = 0;
+
         for (int i =0; i < E.size(); i++)
         {
-            int first_pop = 0; 
-            int second_pop  = 0; 
-            int third_pop = 0;
 
             if (E[first_pop].pop < E[i].pop)
             {
                 first_pop = i;
             }             
-            else if (E[second_pop].pop < E[i].pop)
+            else if (E[second_pop].pop < E[i].pop && )
             {
                 second_pop = i;
             }
@@ -103,21 +99,62 @@ void Trendtracker:: top_three_trends(vector<string> &T)
             {
                 third_pop = i; 
             }
-            
-            T = {E[first_pop].hashtag, E[second_pop].hashtag, E[third_pop].hashtag}; 
-
         }
+
+        T = {E[first_pop].hashtag, E[second_pop].hashtag, E[third_pop].hashtag}; 
     }
 
 
 }
 
-void Trendtracker:: remove(string ht)
+void Trendtracker:: remove(string ht) 
 {
+    for (int i = 0; i < E.size(); i++)
+    {
+        // I can soot it over 
+        if( E[i].hashtag == ht)
+        {   
+            
 
+
+        }
+
+
+    }
 }
 
 void Trendtracker:: top_k_trends(vector<string> &T, int k)
 {
+    int one_index = 0; 
+    int one_pop = E[0].pop;
+    int new_idx = 0;
+   //int two_index = 0;
+    int two_pop = E[0].pop;
+    for (int i = 0; i < k; i ++)
+    {
+        two_pop = E[0].pop;
+        for (int j = 0; j < E.size(); j++)
+        {
+            if ( T.empty() &&  E[j].pop > one_pop)
+              {  
+                one_index = j; 
+                one_pop = E[j].pop;
+              }
+            else 
+            {
+                if (E[j].pop > two_pop  &&  E[j].pop < one_pop)
+                    {
+                        new_idx = j;
+                        two_pop = E[j].pop;
+                    }
+
+                //two_pop = E[j].pop; //update to keep it checking against i-1 or the previous entry 
+                //was logical error was comparing agains prev not largest prev
+            }
+        }
+        one_index = new_idx; 
+        one_pop = two_pop;
+        T.push_back(E[one_index].hashtag); // so this should be ordered by largest to smallest
+    }
 
 }
