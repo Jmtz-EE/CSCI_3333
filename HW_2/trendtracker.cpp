@@ -8,17 +8,19 @@ string s;
 //read from the file
 ifstream fin(filename); //ios::in ios::out 
 // fstream, ifstream , ofstream
-while(!fin.eof()) //O(n )
+while(!fin.eof()) //O(n)
 {
     file >> s; //O(1)
     E.push_back(s); //O(1)
 }
 
+    return; // do constructors need a return? 
+
 }
 
 int Trendtracker :: size() 
 {
-    E.size(); //O(1)
+   return E.size(); //O(1)
 
 }
 
@@ -30,6 +32,28 @@ void Trendtracker :: tweeted(string ht)
     //then add 1
     //if in alphabetical order i can look at the ASCII and compare that way
      
+    //implementing binary search 
+    int start; 
+    int middle; 
+    int end;
+    //loop pseudo code 
+    for (int i = 0; i < E.size(); i++)
+    {
+    //if(ht > middlE.hastag[i])
+        //move start
+
+    //else if ( ht < middleE.hastag[i])
+        //move end
+
+    //else 
+        // middle == ht 
+        //middle.pop + 1
+
+        //return
+
+
+    }
+
 
 }
 

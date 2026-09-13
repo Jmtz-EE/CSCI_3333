@@ -72,89 +72,136 @@ string Trendtracker:: top_trend()
 
 }
 
-void Trendtracker:: top_three_trends(vector<string> &T)
+void Trendtracker::top_three_trends(vector<string> &T)
 {
-    //goal find the top three trends
-    if (E.empty()) //i infered this from the previous case 
-        T = {"", "", ""};
+    T.clear();
 
-    else //check for 3 largest pops
+    if (E.empty())
+        return;
+
+    int first = 0;
+
+    for (int i = 1; i < E.size(); i++)
     {
-        int first_pop = 0;
-        int second_pop  = 0;
-        int third_pop = 0;
-
-        for (int i =0; i < E.size(); i++)
+        if (E[i].pop > E[first].pop)
         {
-
-            if (E[first_pop].pop < E[i].pop)
-            {
-                first_pop = i;
-            }             
-            else if (E[second_pop].pop < E[i].pop && )
-            {
-                second_pop = i;
-            }
-            else if(E[third_pop].pop < E[i].pop)
-            {
-                third_pop = i; 
-            }
+            first = i;
         }
-
-        T = {E[first_pop].hashtag, E[second_pop].hashtag, E[third_pop].hashtag}; 
     }
 
+    T.push_back(E[first].hashtag);
 
+    if (E.size() == 1)
+        return;
+
+    int second = -1;
+
+    for (int i = 0; i < E.size(); i++)
+    {
+        if (i != first)
+        {
+            if (second == -1 || E[i].pop > E[second].pop)
+            {
+                second = i;
+            }
+        }
+    }
+
+    T.push_back(E[second].hashtag);
+
+    if (E.size() == 2)
+        return;
+
+    int third = -1;
+
+    for (int i = 0; i < E.size(); i++)
+    {
+        if (i != first && i != second)
+        {
+            if (third == -1 || E[i].pop > E[third].pop)
+            {
+                third = i;
+            }
+        }
+    }
+
+    T.push_back(E[third].hashtag);
 }
 
 void Trendtracker:: remove(string ht) 
 {
     for (int i = 0; i < E.size(); i++)
     {
-        // I can soot it over 
         if( E[i].hashtag == ht)
         {   
-            
-
-
+            E.erase(E.begin() +i); 
+            return; 
         }
-
-
     }
 }
 
-void Trendtracker:: top_k_trends(vector<string> &T, int k)
+void Trendtracker::top_k_trends(vector<string> &T, int k)
 {
-    int one_index = 0; 
-    int one_pop = E[0].pop;
-    int new_idx = 0;
-   //int two_index = 0;
-    int two_pop = E[0].pop;
-    for (int i = 0; i < k; i ++)
-    {
-        two_pop = E[0].pop;
-        for (int j = 0; j < E.size(); j++)
-        {
-            if ( T.empty() &&  E[j].pop > one_pop)
-              {  
-                one_index = j; 
-                one_pop = E[j].pop;
-              }
-            else 
-            {
-                if (E[j].pop > two_pop  &&  E[j].pop < one_pop)
-                    {
-                        new_idx = j;
-                        two_pop = E[j].pop;
-                    }
+    T.clear();
 
-                //two_pop = E[j].pop; //update to keep it checking against i-1 or the previous entry 
-                //was logical error was comparing agains prev not largest prev
-            }
+    if (E.empty() || k <= 0)
+        return;
+
+    if (k > E.size())
+        k = E.size();
+
+    int previous_pop = 0;
+    int previous_index = -1;
+
+    // Find the first/top trend
+    int top_index = 0;
+
+    for (int j = 1; j < E.size(); j++)
+    {
+        if (E[j].pop > E[top_index].pop)
+        {
+            top_index = j;
         }
-        one_index = new_idx; 
-        one_pop = two_pop;
-        T.push_back(E[one_index].hashtag); // so this should be ordered by largest to smallest
     }
 
+    T.push_back(E[top_index].hashtag);
+
+    previous_pop = E[top_index].pop;
+    previous_index = top_index;
+
+    // Find the remaining k - 1 trends
+    for (int i = 1; i < k; i++)
+    {
+        int new_idx = -1;
+
+        for (int j = 0; j < E.size(); j++)
+        {
+            // Find a lower popularity than the previous trend
+            if (E[j].pop < previous_pop)
+            {
+                if (new_idx == -1 || E[j].pop > E[new_idx].pop)
+                {
+                    new_idx = j;
+                }
+            }
+
+            // If popularity is tied, use the next index.
+            // This prevents selecting the same entry again.
+            else if (E[j].pop == previous_pop && j > previous_index)
+            {
+                if (new_idx == -1 || E[j].pop > E[new_idx].pop)
+                {
+                    new_idx = j;
+                }
+            }
+        }
+
+        if (new_idx == -1)
+            break;
+
+        T.push_back(E[new_idx].hashtag);
+
+        previous_pop = E[new_idx].pop;
+        previous_index = new_idx;
+    }
 }
