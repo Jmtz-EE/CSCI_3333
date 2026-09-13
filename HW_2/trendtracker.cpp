@@ -2,12 +2,18 @@
 
 Trendtracker :: Trendtracker(string filename)
 {
-/*so needs to create trendtracker and fill it with the 
-hashtags in the provided file 
-must run in O(n) - assumin this means pass by ref as a 
-pass by value as we discussed is O(n) so for O(1) pass by 
-ref and make everything in the method constant runtime 
+/* Read wrong we need O(n) so simple loop should work 
 */
+string s; 
+//read from the file
+ifstream fin(filename); //ios::in ios::out 
+// fstream, ifstream , ofstream
+while(!fin.eof()) //O(n )
+{
+    file >> s; //O(1)
+    E.push_back(s); //O(1)
+}
+
 }
 
 int Trendtracker :: size() 
@@ -18,23 +24,34 @@ int Trendtracker :: size()
 
 void Trendtracker :: tweeted(string ht)
 {
+    //must run in O(log(n)) so it must be able to 
+    //split the input n to n/2 ..... 1 as needed
+    //since its not O(n) i cant look at every entry 
+    //then add 1
+    //if in alphabetical order i can look at the ASCII and compare that way
+     
 
 }
 
 int Trendtracker :: popularity(string name) 
 {
-
+    //must run in O(log(n)) need to do some split on the list
+    //like a binary search and return E.
 }
 
 string Trendtracker :: top_trend()
 {
-
+    //run in O(1) so no comparing is allowed ? 
+    //maybe keep track of which it is like how size does 
+        //yes exactly that since we have top three just pass by ref vector[0]
 
 }
 
 void Trendtracker :: top_three_trends(vector<string> &T) 
 {
-
+    //pass by ref S;  O(1)
+    //when is S populated 
+    //have to find the top three at some point 
 
 }
 
